@@ -22,10 +22,6 @@ def GrabAtt(obj, attr, default=None):
     except AttributeError:
         return default
 
-
-
-
-
 async def BackupChannel(ChannelID:int):
     TargetChannel = client.get_channel(ChannelID)
     #print(f"Press Enter to backup: \"{TargetChannel.name}\"")
@@ -33,9 +29,14 @@ async def BackupChannel(ChannelID:int):
     async for Message in TargetChannel.history(limit=None,oldest_first=True):
         MessageDataDict = {} # Initialize the dictionary for this message
 
+        ## ACTIVITY ##
         if Message.activity:
             MessageDataDict.update({"activity" : Message.activity})
-        else: print("No activity!") # Debug
+        else: 
+            MessageDataDict.update({"activity" : ""})
+            print("No activity!") # Debug
+        
+        ## APPLICATION ##
         if Message.application:
             MessageDataDict.update({"application":{
                 "id" : Message.application.id,
@@ -50,10 +51,19 @@ async def BackupChannel(ChannelID:int):
                     "key" : Message.application.cover.key
                 }
             }})
-        else: print("No application!") # Debug
+        else: 
+            MessageDataDict.update({"application":""})
+            print("No application!") # Debug
+        
+        ## APPLICATION_ID ##
         if Message.application_id:
             MessageDataDict.update({"application_id" : Message.application_id})
-        else: print("No application_id!") # Debug
+            print("Added application_id") # Debug
+        else: 
+            
+            print("No application_id!") # Debug
+        
+        ## ATTACHMENTS ##
         if Message.attachments:
             MsgAttachmentsList = [] # Initialize the attachment list for this message
 
@@ -79,13 +89,16 @@ async def BackupChannel(ChannelID:int):
                     }
                 })
             MessageDataDict.update({"attachments":MsgAttachmentsList})
+            print("Added attachments") # Debug
         else: print("No attachments!") # Debug
+        
 
         if hasattr(Message.author, "roles"): # Test for roles, if the user is not in the guild anymore, this will fail.
-
+            print("Has roles, assuming user is member")
             MsgAuthorRolesList = [] # Initialize the list of roles
             for item in Message.author.roles: # Iterate through roles, adding them to the roles list
-                MsgAuthorRolesList.append({
+                 
+                RolesAttributesDict = { # Role attributes that should always existy
                     "id" : item.id,
                     "name" : item.name,
                     "hoist" : item.hoist,
@@ -95,13 +108,17 @@ async def BackupChannel(ChannelID:int):
                         "r" : item.colour.r,
                         "g" : item.colour.g,
                         "b" : item.colour.b
-                    },
-                    "icon" : {
-                        "url" : item.icon.url,
-                        "key" : item.icon.key
-                    }
-                })
-            MessageDataDict.update({"Member" : {
+                }}
+                
+                if item.icon: # Test for an icon, if so, add it to the dict
+                    RolesAttributesDict.update(
+                    {   "icon" : {
+                            "url" : item.icon.url,
+                            "key" : item.icon.key
+                    }})
+                MsgAuthorRolesList.append(RolesAttributesDict)
+                
+            MessageDataDict.update({"Member" : { # FUCKING FINALLY add the member data to the main dict
                 "nick" : Message.author.nick,
                 "name" : Message.author.name,
                 "id" : Message.author.id,
@@ -119,10 +136,7 @@ async def BackupChannel(ChannelID:int):
                 },
                 "roles" : MsgAuthorRolesList
             }})
-            
         print(f"{MessageDataDict}\n\n")
-
-
 
 
 
