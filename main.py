@@ -184,18 +184,17 @@ async def BackupChannel(ChannelID:int):
             
         ## CREATE_AT ##
         if Message.created_at:
-            MessageDataDict.update({"created_at" : Message.created_at})
+            MessageDataDict.update({"created_at" : str(Message.created_at.timestamp())})
         else:
             MessageDataDict.update({"created_at" : ""}) # Fill with nothing if none exists
             print("No created_at") # Debug
             
         ## EDITED_AT ##
         if Message.edited_at:
-            MessageDataDict.update({"edited_at" : Message.edited_at})
+            MessageDataDict.update({"edited_at" : str(Message.edited_at.timestamp())})
         else:
             MessageDataDict.update({"edited_at" : ""}) # Fill with nothing if none exists
             print("No edited_at") # Debug
-            
             
         ## EMBEDS ##
         if Message.embeds:
@@ -212,6 +211,10 @@ async def BackupChannel(ChannelID:int):
                        "b" : item.colour.b
                    }
                })
+        else:
+            MessageDataDict.update({"embeds" : ""}) # Fill with nothing if none exists
+            print("No embeds") # Debug
+        
             
 
                 
