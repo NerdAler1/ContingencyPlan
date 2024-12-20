@@ -197,6 +197,22 @@ async def BackupChannel(ChannelID:int):
             print("No edited_at") # Debug
             
             
+        ## EMBEDS ##
+        if Message.embeds:
+            EmbedList : list = []
+            for item in Message.embeds:
+               EmbedList.append({
+                   "title" : item.title,
+                   "type" : item.type,
+                   "description" : item.description,
+                   "url" : item.url,
+                   "colour" : {
+                       "r" : item.colour.r,
+                       "g" : item.colour.g,
+                       "b" : item.colour.b
+                   }
+               })
+            
 
                 
                 
