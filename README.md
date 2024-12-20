@@ -139,25 +139,25 @@ Below is the list of attributes tracked for the project, organized in a nested s
   - **suppress_notifications** (bool)✅
   - **voice** (bool)✅
 
-### Metadata
-- **id** (int)
-- **interaction_metadata** (MessageInteractionMetadata)
-  - **id** (int)
+### Metadata✅
+- **id** (int)✅
+- **interaction_metadata** (MessageInteractionMetadata)✅
+  - **id** (int)✅
 
-### URLs
-- **jump_url** (str)
+### URLs✅
+- **jump_url** (str)✅
 
-### Mentions
-- **mention_everyone** (bool)
-- **mentions** (list[User])
-  - **name** (str)
-  - **id** (int)
-  - **global_name** (str)
-  - **bot** (bool)
-  - **system** (bool)
-  - **display_avatar** (Asset)
-    - **url** (str)
-    - **key** (str)
+### Mentions✅
+- **mention_everyone** (bool)✅
+- **mentions** (list[User])✅
+  - **name** (str)✅
+  - **id** (int)✅
+  - **global_name** (str)✅
+  - **bot** (bool)✅
+  - **system** (bool)✅
+  - **display_avatar** (Asset)✅
+    - **url** (str)✅
+    - **key** (str)✅
 
 ### Message Properties
 - **pinned** (bool)
