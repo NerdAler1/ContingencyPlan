@@ -6,11 +6,11 @@ import json
 from dotenv import dotenv_values
 from io import BytesIO
 ### VARIABLES
-ApiKey = dotenv_values(".env")
+ApiKey : dict = dotenv_values(".env")
 client = discord.Client(intents=discord.Intents.all())
-TestMessageID = 1313081608563064862
-TestGuildID = 1302499549931110413
-TestChannelID = 1304499100749660250
+TestMessageID : int = 1313081608563064862
+TestGuildID : int = 1302499549931110413
+TestChannelID : int = 1304499100749660250
 
 def GrabAtt(obj, attr, default=None):
     try:
@@ -24,16 +24,14 @@ def GrabAtt(obj, attr, default=None):
 
 async def BackupChannel(ChannelID:int):
     TargetChannel = client.get_channel(ChannelID)
-    #print(f"Press Enter to backup: \"{TargetChannel.name}\"")
-    #input()
     async for Message in TargetChannel.history(limit=None,oldest_first=True):
-        MessageDataDict = {} # Initialize the dictionary for this message
+        MessageDataDict : dict = {} # Initialize the dictionary for this message
 
         ## ACTIVITY ##
         if Message.activity:
             MessageDataDict.update({"activity" : Message.activity})
         else: 
-            MessageDataDict.update({"activity" : ""})
+            MessageDataDict.update({"activity" : ""}) # Fill with nothing if none exists
             print("No activity!") # Debug
         
         ## APPLICATION ##
@@ -52,7 +50,7 @@ async def BackupChannel(ChannelID:int):
                 }
             }})
         else: 
-            MessageDataDict.update({"application":""})
+            MessageDataDict.update({"application" : ""}) # Fill with nothing if none exists
             print("No application!") # Debug
         
         ## APPLICATION_ID ##
@@ -60,12 +58,12 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"application_id" : Message.application_id})
             print("Added application_id") # Debug
         else: 
-            
+            MessageDataDict.update({"application_id" : ""}) # Fill with nothing if none exists
             print("No application_id!") # Debug
         
         ## ATTACHMENTS ##
         if Message.attachments:
-            MsgAttachmentsList = [] # Initialize the attachment list for this message
+            MsgAttachmentsList : list = [] # Initialize the attachment list for this message
 
             for item in Message.attachments: # Iterate through attachments, appending attributes to the list
                 MsgAttachmentsList.append({
@@ -90,13 +88,15 @@ async def BackupChannel(ChannelID:int):
                 })
             MessageDataDict.update({"attachments":MsgAttachmentsList})
             print("Added attachments") # Debug
-        else: print("No attachments!") # Debug
+        else:
+            MessageDataDict.update({"attachments" : ""}) # Fill with nothing if none exists
+            print("No attachments!") # Debug
         
-
+        ## ROLES ##
         if hasattr(Message.author, "roles"): # Test for roles, if the user is not in the guild anymore, this will fail.
             print("Has roles, assuming user is member")
             MsgAuthorRolesList = [] # Initialize the list of roles
-            for item in Message.author.roles: # Iterate through roles, adding them to the roles list
+            for item in Message.author.roles: # Iterate through roles, adding them to the roles list (roles come first because otherwise something happens i forgot :P)
                  
                 RolesAttributesDict = { # Role attributes that should always existy
                     "id" : item.id,
@@ -118,7 +118,7 @@ async def BackupChannel(ChannelID:int):
                     }})
                 MsgAuthorRolesList.append(RolesAttributesDict)
                 
-            MessageDataDict.update({"Member" : { # FUCKING FINALLY add the member data to the main dict
+            MessageDataDict.update({"author" : { # FUCKING FINALLY add the member data to the main dict
                 "nick" : Message.author.nick,
                 "name" : Message.author.name,
                 "id" : Message.author.id,
@@ -136,8 +136,77 @@ async def BackupChannel(ChannelID:int):
                 },
                 "roles" : MsgAuthorRolesList
             }})
-        print(f"{MessageDataDict}\n\n")
+        elif hasattr(Message, "author"): # Tests if author even exists at all, it absolutely should, but discord is scary soo....
+            MessageDataDict.update({"author" : {
+                "name" : {Message.author.name},
+                "id" : {Message.author.id},
+                "global_name" : {Message.author.global_name},
+                "bot" : {Message.author.bot},
+                "system" : {Message.author.system},
+                "display_avatar" : {
+                    "url" : {Message.author.display_avatar.url},
+                    "key" : {Message.author.display_avatar.key}                
+                }
+            }})
+        else:
+            MessageDataDict.update({"author" : ""}) # Fill with nothing if none exists
+            print("No author????!??!?!?!?!?!!") # Debug
+                
+        ## CHANNEL ##        
+        if Message.channel:
+            MessageDataDict.update({"channel":{
+                "name" : Message.channel.name,
+                "id" : Message.channel.id,
+                "category_id" : Message.channel.category_id,
+                "topic" : Message.channel.topic,
+                "slowmode_delay" : Message.channel.slowmode_delay,
+                "nsfw" : Message.channel.nsfw,
+                "jump_url" : Message.channel.jump_url,
+                "type" : Message.channel.type
+            }})
+        else:
+            MessageDataDict.update({"channel" : ""}) # Fill with nothing if none exists
+            print("No channel????!??!?!?!?!?!!") # Debug
+        
+        ## CONTENT ##
+        if Message.content:
+            MessageDataDict.update({"content" : Message.content})
+        else:
+            MessageDataDict.update({"content" : ""}) # Fill with nothing if none exists
+            print("No content") # Debug 
+                
+        ## CLEAN_CONTENT ##        
+        if Message.clean_content:
+            MessageDataDict.update({"clean_content" : Message.clean_content})
+        else:
+            MessageDataDict.update({"clean_content" : ""}) # Fill with nothing if none exists
+            print("No clean_content") # Debug
+            
+        ## CREATE_AT ##
+        if Message.created_at:
+            MessageDataDict.update({"created_at" : Message.created_at})
+        else:
+            MessageDataDict.update({"created_at" : ""}) # Fill with nothing if none exists
+            print("No created_at") # Debug
+            
+        ## EDITED_AT ##
+        if Message.edited_at:
+            MessageDataDict.update({"edited_at" : Message.edited_at})
+        else:
+            MessageDataDict.update({"edited_at" : ""}) # Fill with nothing if none exists
+            print("No edited_at") # Debug
+            
+            
 
+                
+                
+        print(f"{MessageDataDict}\n\n")
+        
+        MessageFilePath : str = f"Backups/{Message.guild.id}/{Message.channel.id}"
+        if not os.path.exists(MessageFilePath):
+            os.makedirs(MessageFilePath)    
+        with open(f"{MessageFilePath}/{Message.id}.json", 'w') as fp:
+            json.dump(MessageDataDict, fp, indent=4)
 
 
 
