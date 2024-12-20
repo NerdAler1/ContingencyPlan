@@ -248,8 +248,14 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"interaction_metadata" : ""}) # Fill with nothing if none exists
             print("No interaction_metadata") # Debug
         
+        ## JUMP_URL ##
+        if Message.jump_url:
+            MessageDataDict.update({"jump_url" : Message.jump_url})
+        else:
+            MessageDataDict.update({"jump_url" : ""}) # Fill with nothing if none exists
+            print("No jump_url") # Debug
+            
         
-                
                 
         print(f"{MessageDataDict}\n\n")
         
