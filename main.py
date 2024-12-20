@@ -241,9 +241,14 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"id" : ""}) # Fill with nothing if none exists
             print("WHAT THE FUCK NO ID?????????") # Debug
         
+        ## INTERACTION_METADATA ##
+        if Message.interaction_metadata:
+            MessageDataDict.update({"interaction_metadata" : Message.interaction_metadata.id})
+        else:
+            MessageDataDict.update({"interaction_metadata" : ""}) # Fill with nothing if none exists
+            print("No interaction_metadata") # Debug
         
-                
-                
+        
                 
                 
         print(f"{MessageDataDict}\n\n")
