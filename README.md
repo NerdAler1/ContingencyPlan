@@ -115,16 +115,16 @@ Below is the list of attributes tracked for the project, organized in a nested s
 ### Edited_at✅
 - **edited_at** (datetime.datetime)✅
 
-### Embeds
-- **embeds** (list[Embed])
-  - **title** (str)
-  - **type** (str)
-  - **description** (str)
-  - **url** (str)
-  - **colour** (Colour)
-    - **r** (int)
-    - **g** (int)
-    - **b** (int)
+### Embeds✅
+- **embeds** (list[Embed])✅
+  - **title** (str)✅
+  - **type** (str)✅
+  - **description** (str)✅
+  - **url** (str)✅
+  - **colour** (Colour)✅
+    - **r** (int)✅
+    - **g** (int)✅
+    - **b** (int)✅
 
 ### Flags
 - **flags** (MessageFlags)
