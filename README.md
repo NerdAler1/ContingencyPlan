@@ -1,8 +1,19 @@
 # Discord Message Attributes
 
-Below is the list of attributes tracked for the project, organized in a nested structure. Attributes that are finished being tracked are checked off.
+## Goal
+The goal of this project is to be able to backup a discord server in its entirety, create an effective mirror of the server, and have a backup web source containing every attribute captured.
+
+## Backing up
+The current progress of the backup is identified by the checkmarks in the [Attributes section](#attributes). Backups should be stored in JSON format, and they ideally will contain more information than they need too, as to not miss anything.
+
+## Restoring
+Restoring is on hold until [Backing up](#backing-up) is finalized. Restoring should include a bot sending all of the contents of the message, along with subtext indicating who it was from and when. (It possibly would have a link to the web source, however this is all massively TBD)
+
+## Web Source
+I see the web source as being one of two things, either a simple webserver hosting the json files directly, requiring the user to get to it using the replicated message, or possibly as a fully-fledged website that mimics the looks of a normal channel in discord, the insiration of this comes from [PLACEHOLDER's repo](#discord-message-attributes).
 
 ## Attributes
+Below is the list of attributes tracked for the project, organized in a nested structure. Attributes that are finished being tracked are checked off.
 
 ### Activity✅
 - **activity** (dict)✅
