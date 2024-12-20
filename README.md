@@ -126,18 +126,18 @@ Below is the list of attributes tracked for the project, organized in a nested s
     - **g** (int)✅
     - **b** (int)✅
 
-### Flags
-- **flags** (MessageFlags)
-  - **value** (int)
-  - **crossposted** (bool)
-  - **is_crossposted** (bool)
-  - **suppress_embeds** (bool)
-  - **source_message_deleted** (bool)
-  - **urgent** (bool)
-  - **has_thread** (bool)
-  - **ephemeral** (bool)
-  - **suppress_notifications** (bool)
-  - **voice** (bool)
+### Flags✅
+- **flags** (MessageFlags)✅
+  - **value** (int)✅
+  - **crossposted** (bool)✅
+  - **is_crossposted** (bool)✅
+  - **suppress_embeds** (bool)✅
+  - **source_message_deleted** (bool)✅
+  - **urgent** (bool)✅
+  - **has_thread** (bool)✅
+  - **ephemeral** (bool)✅
+  - **suppress_notifications** (bool)✅
+  - **voice** (bool)✅
 
 ### Metadata
 - **id** (int)
