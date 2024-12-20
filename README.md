@@ -1,6 +1,6 @@
 # Discord Message Attributes
 
-Below is the list of attributes tracked for the project, organized in a nested structure. Attributes that are finished being tracked are crossed out.
+Below is the list of attributes tracked for the project, organized in a nested structure. Attributes that are finished being tracked are checked off.
 
 ## Attributes
 
