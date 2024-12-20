@@ -211,10 +211,28 @@ async def BackupChannel(ChannelID:int):
                        "b" : item.colour.b
                    }
                })
+               MessageDataDict.update({"embeds" : EmbedList})
         else:
             MessageDataDict.update({"embeds" : ""}) # Fill with nothing if none exists
             print("No embeds") # Debug
         
+        ## FLAGS ##
+        if Message.flags:
+            MessageDataDict.update({"flags" : {
+                "value" : Message.flags.value,
+                "crossposted" : Message.flags.crossposted,
+                "is_crossposted" : Message.flags.is_crossposted,
+                "suppress_embeds" : Message.flags.suppress_embeds,
+                "suppress_notifications" : Message.flags.suppress_notifications,
+                "urgent" : Message.flags.urgent,
+                "has_thread" : Message.flags.has_thread,
+                "ephemeral" : Message.flags.ephemeral,
+                "source_message_deleted" : Message.flags.source_message_deleted,
+                "voice" : Message.flags.voice
+            }})
+        else:
+            MessageDataDict.update({"flags" : ""}) # Fill with nothing if none exists
+            print("No flags") # Debug
             
 
                 
