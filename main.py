@@ -255,8 +255,33 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"jump_url" : ""}) # Fill with nothing if none exists
             print("No jump_url") # Debug
             
+        ## MENTION_EVERYONE ##
+        if Message.mention_everyone:
+            Message.update({"mention_everyone" : Message.mention_everyone})
+        else:
+            MessageDataDict.update({"mention_everyone" : ""}) # Fill with nothing if none exists
+            print("No mention_everyone") # Debug
         
-                
+        ## MENTIONS ##
+        if Message.mentions:
+            MentionList : list = []
+            for item in Message.mentions:
+                MentionList.append({
+                    "name" : item.name,
+                    "id" : item.id,
+                    "global_name" : item.global_name,
+                    "bot" : item.bot,
+                    "system" : item.system,
+                    "display_avatar" : {
+                        "url" : item.display_avatar.url,
+                        "key" : item.display_avatar.key
+                    }
+                })    
+            MessageDataDict.update({"mentions" : MentionList})
+        else:
+            MessageDataDict.update({"mentions" : ""}) # Fill with nothing if none exists
+            print("No mentions") # Debug
+            
         print(f"{MessageDataDict}\n\n")
         
         MessageFilePath : str = f"Backups/{Message.guild.id}/{Message.channel.id}"
