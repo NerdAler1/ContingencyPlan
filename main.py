@@ -234,7 +234,16 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"flags" : ""}) # Fill with nothing if none exists
             print("No flags") # Debug
             
-
+        ## ID ##
+        if Message.id:
+            MessageDataDict.update({"id" : Message.id})
+        else:
+            MessageDataDict.update({"id" : ""}) # Fill with nothing if none exists
+            print("WHAT THE FUCK NO ID?????????") # Debug
+        
+        
+                
+                
                 
                 
         print(f"{MessageDataDict}\n\n")
