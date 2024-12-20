@@ -281,6 +281,45 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"mentions" : ""}) # Fill with nothing if none exists
             print("No mentions") # Debug
+        
+        ## PINNED ##
+        if Message.pinned:
+            MessageDataDict.update({"pinned" : Message.pinned})
+        else:
+            MessageDataDict.update({"pinned" : ""}) # Fill with nothing if none exists
+            print("No pinned") # Debug
+            
+        ## POLLS ##
+        if Message.poll:
+            PollAnswersList : list = []
+            for item in Message.poll.answers:
+                PollAnswersList.append({
+                    "id" : item.id,
+                    "text" : item.text,
+                    "emoji" : {
+                        "name" : item.emoji.name,
+                        "id" : item.emoji.id,
+                        "require_colons" : item.emoji.require_colons,
+                        "animated" : item.emoji.animated,
+                        "managed" : item.emoji.managed,
+                        "guild_id" : item.emoji.guild_id,
+                        "available" : item.emoji.available,
+                        "url" : item.emoji.url
+                    }
+                })
+                
+            MessageDataDict.update({"poll" : {
+                "question" : Message.poll.question,
+                "answers" : PollAnswersList,
+                "expires_at" : Message.poll.expires_at.timestamp(),
+                "created_at" : Message.poll.created_at.timestamp(),
+                "total_votes" : Message.poll.total_votes
+            }})
+        else:
+            MessageDataDict.update({"poll" : ""}) # Fill with nothing if none exists
+            print("No poll") # Debug
+            
+            
             
         print(f"{MessageDataDict}\n\n")
         
