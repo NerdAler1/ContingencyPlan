@@ -315,7 +315,60 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"poll" : ""}) # Fill with nothing if none exists
             print("No poll") # Debug
             
+        ## REACTIONS ##
+        if Message.reactions:
+            MessageReactionsList : list = []
+            for item in Message.reactions:
+                UsersReacted : list = []
+                async for user in item.users():
+                    UsersReacted.append(user.id)
+                MessageReactionsList.append({
+                    "emoji" : item.emoji,
+                    "count" : item.count,
+                    "users" : UsersReacted
+                    })
+            MessageDataDict.update({"reactions" : MessageReactionsList})
+        else:
+            MessageDataDict.update({"reactions" : ""}) # Fill with nothing if none exists
+            print("No reactions") # Debug
+        
+        ## REFERENCE ##
+        if Message.reference:
+            MessageDataDict.update({"reference" : {
+                "message_id" : Message.reference.message_id,
+                "channel_id" : Message.reference.channel_id,
+                "guild_id" : Message.reference.guild_id,
+                "cached_message" : Message.reference.cached_message.content,
+                "jump_url" : Message.reference.jump_url
+            }})
+        else:
+            MessageDataDict.update({"reference" : ""}) # Fill with nothing if none exists
+            print("No reference") # Debug    
             
+        ## STICKERS ##
+        if Message.stickers:
+            StickersList : list = []
+            for item in Message.stickers:
+                StickersList.append({
+                    "name" : item.name,
+                    "id" : item.id,
+                    "format" : {
+                        "value" : item.format.value,
+                        "file_extension" : item.format.file_extension,
+                        "value" : item.format.value
+                    }
+                })
+            MessageDataDict.update({"stickers" : StickersList})
+        else:
+            MessageDataDict.update({"stickers" : ""}) # Fill with nothing if none exists
+            print("No stickers") # Debug 
+            
+        ## SYSTEM_CONTENT ##
+        if Message.system_content:
+            MessageDataDict.update({"system_content" : Message.system_content})
+        else:
+            MessageDataDict.update({"system_content" : ""}) # Fill with nothing if none exists
+            print("No system_content") # Debug     
             
         print(f"{MessageDataDict}\n\n")
         
