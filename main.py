@@ -370,6 +370,18 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"system_content" : ""}) # Fill with nothing if none exists
             print("No system_content") # Debug     
             
+        ## THREADS ##
+        if Message.thread:
+            MessageDataDict.update({
+                "name" : Message.thread.name,
+                "id" : Message.thread.id,
+                "archived" : Message.thread.archived,
+                "locked" : Message.thread.locked,
+                "invitable" : Message.thread.invitable,
+            })
+            
+            
+            
         print(f"{MessageDataDict}\n\n")
         
         MessageFilePath : str = f"Backups/{Message.guild.id}/{Message.channel.id}"
