@@ -299,11 +299,7 @@ async def BackupChannel(ChannelID:int):
                     "emoji" : {
                         "name" : item.emoji.name,
                         "id" : item.emoji.id,
-                        "require_colons" : item.emoji.require_colons,
                         "animated" : item.emoji.animated,
-                        "managed" : item.emoji.managed,
-                        "guild_id" : item.emoji.guild_id,
-                        "available" : item.emoji.available,
                         "url" : item.emoji.url
                     }
                 })
