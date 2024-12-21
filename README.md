@@ -159,59 +159,59 @@ Below is the list of attributes tracked for the project, organized in a nested s
     - **url** (str)✅
     - **key** (str)✅
 
-### Message Properties
-- **pinned** (bool)
+### Message Properties✅
+- **pinned** (bool)✅
 
-### Polls
-- **poll** (Poll)
-  - **question** (str)
-  - **answers** (list[PollAnswer])
-    - **id** (int)
-    - **text** (str)
-    - **emoji** (Emoji)
-      - **name** (str)
-      - **id** (int)
-      - **require_colons** (bool)
-      - **animated** (bool)
-      - **managed** (bool)
-      - **guild_id** (int)
-      - **available** (bool)
-      - **url** (str)
-    - **vote_count** (int)
-  - **expires_at** (datetime.datetime)
-  - **created_at** (datetime.datetime)
-  - **total_votes** (int)
+### Polls✅
+- **poll** (Poll)✅
+  - **question** (str)✅
+  - **answers** (list[PollAnswer])✅
+    - **id** (int)✅
+    - **text** (str)✅
+    - **emoji** (Emoji)✅
+      - **name** (str)✅
+      - **id** (int)✅
+      - **require_colons** (bool)✅
+      - **animated** (bool)✅
+      - **managed** (bool)✅
+      - **guild_id** (int)✅
+      - **available** (bool)✅
+      - **url** (str)✅
+    - **vote_count** (int)✅
+  - **expires_at** (datetime.datetime)✅
+  - **created_at** (datetime.datetime)✅
+  - **total_votes** (int)✅
 
-### Reactions
-- **reactions** (list[Reaction])
-  - **emoji**
-    - **name** (str)
-    - **id** (int)
-    - **require_colons** (bool)
-    - **animated** (bool)
-    - **managed** (bool)
-    - **guild_id** (int)
-    - **available** (bool)
-    - **url** (str)
-  - **count** (int)
+### Reactions✅
+- **reactions** (list[Reaction])✅
+  - **emoji**✅
+    - **name** (str)✅
+    - **id** (int)✅
+    - **require_colons** (bool)✅
+    - **animated** (bool)✅
+    - **managed** (bool)✅
+    - **guild_id** (int)✅
+    - **available** (bool)✅
+    - **url** (str)✅
+  - **count** (int)✅
 
-### References
-- **reference** (MessageReference)
-  - **message_id** (int)
-  - **channel_id** (int)
-  - **guild_id** (int)
-  - **cached_message** (Message)
-  - **jump_url** (str)
+### References✅
+- **reference** (MessageReference)✅
+  - **message_id** (int)✅
+  - **channel_id** (int)✅
+  - **guild_id** (int)✅
+  - **cached_message** (Message)✅
+  - **jump_url** (str)✅
 
-### Stickers
-- **stickers** (list[StickerItem])
-  - **name** (str)
-  - **id** (int)
-  - **format** (StickerFormatType)
-  - **url** (str)
+### Stickers✅
+- **stickers** (list[StickerItem])✅
+  - **name** (str)✅
+  - **id** (int)✅
+  - **format** (StickerFormatType)✅
+  - **url** (str)✅
 
-### System
-- **system_content** (str)
+### System✅
+- **system_content** (str)✅
 
 ### Threads
 - **thread** (Thread)
