@@ -79,7 +79,7 @@ async def BackupChannel(ChannelID:int):
                     "description" : item.description,
                     "ephemeral" : item.ephemeral,
                     "duration" : item.duration,
-                    "waveform" : item.waveform,
+                    "waveform" : str(item.waveform),
                     "flags" : {
                         "value" : item.flags.value,
                         "clip" : item.flags.clip,
@@ -323,15 +323,18 @@ async def BackupChannel(ChannelID:int):
         if Message.poll:
             PollAnswersList : list = []
             for item in Message.poll.answers:
-                PollAnswersList.append({
-                    "id" : item.id,
-                    "text" : item.text,
-                    "emoji" : {
+                EmojiDict : dict = {}
+                if item.emoji:
+                    EmojiDict.update({
                         "name" : item.emoji.name,
                         "id" : item.emoji.id,
                         "animated" : item.emoji.animated,
                         "url" : item.emoji.url
-                    }
+                    })
+                PollAnswersList.append({
+                    "id" : item.id,
+                    "text" : item.text,
+                    "emoji" : EmojiDict
                 })
                 
             MessageDataDict.update({"poll" : {
