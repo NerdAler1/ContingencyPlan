@@ -45,7 +45,7 @@ async def BackupChannel(ChannelID:int):
                     "key" : Message.application.icon.key
                 },
                 "cover" : {
-                    "url" : Message.application.cover.url,
+                    "url" : Message.application.cover.url, 
                     "key" : Message.application.cover.key
                 }
             }})
@@ -67,6 +67,7 @@ async def BackupChannel(ChannelID:int):
 
             for item in Message.attachments: # Iterate through attachments, appending attributes to the list
                 MsgAttachmentsList.append({
+                   "url" : item.url,
                     "id" : item.id,
                     "size" : item.size,
                     "height" : item.height,
@@ -94,6 +95,7 @@ async def BackupChannel(ChannelID:int):
         
         ## ROLES ##
         if hasattr(Message.author, "roles"): # Test for roles, if the user is not in the guild anymore, this will fail.
+            AvatarDict : dict = {} # Initialize the avatar dict
             print("Has roles, assuming user is member")
             MsgAuthorRolesList = [] # Initialize the list of roles
             for item in Message.author.roles: # Iterate through roles, adding them to the roles list (roles come first because otherwise something happens i forgot :P)
@@ -117,6 +119,15 @@ async def BackupChannel(ChannelID:int):
                             "key" : item.icon.key
                     }})
                 MsgAuthorRolesList.append(RolesAttributesDict)
+            
+            if Message.author.avatar: # Test for an avatar, if so, add it to a temp dict
+                 AvatarDict = {
+                     "url" : Message.author.avatar.url,
+                     "key" : Message.author.avatar.key
+                }
+            else:
+                AvatarDict = {}
+                
                 
             MessageDataDict.update({"author" : { # FUCKING FINALLY add the member data to the main dict
                 "nick" : Message.author.nick,
@@ -125,10 +136,7 @@ async def BackupChannel(ChannelID:int):
                 "global_name" : Message.author.global_name,
                 "bot" : Message.author.bot,
                 "system" : Message.author.system,
-                "avatar" : {
-                    "url" : Message.author.avatar.url,
-                    "key" : Message.author.avatar.key
-                },
+                "avatar" : AvatarDict,
                 "colour" : {
                     "r" : Message.author.colour.r,
                     "g" : Message.author.colour.g,
@@ -137,16 +145,21 @@ async def BackupChannel(ChannelID:int):
                 "roles" : MsgAuthorRolesList
             }})
         elif hasattr(Message, "author"): # Tests if author even exists at all, it absolutely should, but discord is scary soo....
-            MessageDataDict.update({"author" : {
-                "name" : {Message.author.name},
-                "id" : {Message.author.id},
-                "global_name" : {Message.author.global_name},
-                "bot" : {Message.author.bot},
-                "system" : {Message.author.system},
-                "display_avatar" : {
-                    "url" : {Message.author.display_avatar.url},
-                    "key" : {Message.author.display_avatar.key}                
+            if Message.author.display_avatar: # Test for an avatar, if so, add it to a temp dict
+                 AvatarDict = {
+                     "url" : Message.author.display_avatar.url,
+                     "key" : Message.author.display_avatar.key
                 }
+            else:
+                AvatarDict = {}
+                     
+            MessageDataDict.update({"author" : {
+                "name" : Message.author.name,
+                "id" : Message.author.id,
+                "global_name" : Message.author.global_name,
+                "bot" :Message.author.bot,
+                "system" : Message.author.system,
+                "display_avatar" : AvatarDict
             }})
         else:
             MessageDataDict.update({"author" : ""}) # Fill with nothing if none exists
@@ -162,7 +175,10 @@ async def BackupChannel(ChannelID:int):
                 "slowmode_delay" : Message.channel.slowmode_delay,
                 "nsfw" : Message.channel.nsfw,
                 "jump_url" : Message.channel.jump_url,
-                "type" : Message.channel.type
+                "type" : {
+                    "name" : Message.channel.type.name,
+                    "value" : Message.channel.type.value
+                }
             }})
         else:
             MessageDataDict.update({"channel" : ""}) # Fill with nothing if none exists
@@ -204,12 +220,7 @@ async def BackupChannel(ChannelID:int):
                    "title" : item.title,
                    "type" : item.type,
                    "description" : item.description,
-                   "url" : item.url,
-                   "colour" : {
-                       "r" : item.colour.r,
-                       "g" : item.colour.g,
-                       "b" : item.colour.b
-                   }
+                   "url" : item.url
                })
                MessageDataDict.update({"embeds" : EmbedList})
         else:
@@ -243,7 +254,26 @@ async def BackupChannel(ChannelID:int):
         
         ## INTERACTION_METADATA ##
         if Message.interaction_metadata:
-            MessageDataDict.update({"interaction_metadata" : Message.interaction_metadata.id})
+            MessageDataDict.update({"interaction_metadata" : {
+                "created_at" : Message.interaction_metadata.created_at.timestamp(),
+                "user" : {
+                    "name" : Message.interaction_metadata.user.name,
+                    "id" : Message.interaction_metadata.user.id,
+                    "global_name" : Message.interaction_metadata.user.global_name,
+                    "bot" :Message.interaction_metadata.user.bot,
+                    "system" : Message.interaction_metadata.user.system,
+                    "display_avatar" : {
+                        "url" : Message.interaction_metadata.user.display_avatar.url,
+                        "key" : Message.interaction_metadata.user.display_avatar.key   
+                    }
+                },
+                "original_response_message_id" : Message.interaction_metadata.original_response_message_id,
+                "type" : {
+                    "name" : Message.interaction_metadata.type.name,
+                    "value" : Message.interaction_metadata.type.value
+                },
+                "interacted_message_id" : Message.interaction_metadata.interacted_message_id
+            }})
         else:
             MessageDataDict.update({"interaction_metadata" : ""}) # Fill with nothing if none exists
             print("No interaction_metadata") # Debug
@@ -257,7 +287,7 @@ async def BackupChannel(ChannelID:int):
             
         ## MENTION_EVERYONE ##
         if Message.mention_everyone:
-            Message.update({"mention_everyone" : Message.mention_everyone})
+            MessageDataDict.update({"mention_everyone" : Message.mention_everyone})
         else:
             MessageDataDict.update({"mention_everyone" : ""}) # Fill with nothing if none exists
             print("No mention_everyone") # Debug
@@ -323,7 +353,7 @@ async def BackupChannel(ChannelID:int):
                 async for user in item.users():
                     UsersReacted.append(user.id)
                 MessageReactionsList.append({
-                    "emoji" : item.emoji,
+                    "emoji" : str(item.emoji),
                     "count" : item.count,
                     "users" : UsersReacted
                     })
@@ -338,7 +368,6 @@ async def BackupChannel(ChannelID:int):
                 "message_id" : Message.reference.message_id,
                 "channel_id" : Message.reference.channel_id,
                 "guild_id" : Message.reference.guild_id,
-                "cached_message" : Message.reference.cached_message.content,
                 "jump_url" : Message.reference.jump_url
             }})
         else:
@@ -372,14 +401,57 @@ async def BackupChannel(ChannelID:int):
             
         ## THREADS ##
         if Message.thread:
-            MessageDataDict.update({
+            MessageDataDict.update({"thread" : {
                 "name" : Message.thread.name,
                 "id" : Message.thread.id,
                 "archived" : Message.thread.archived,
                 "locked" : Message.thread.locked,
                 "invitable" : Message.thread.invitable,
-            })
+                "auto_archive_duration" : Message.thread.auto_archive_duration,
+                "type" : {
+                    "name" : Message.thread.type.name,
+                    "value" : Message.thread.type.value
+                },
+                "owner" : {
+                    "name" : Message.author.name,
+                    "id" : Message.author.id,
+                    "global_name" : Message.author.global_name,
+                    "bot" : Message.author.bot,
+                    "system" : Message.author.system,
+                    "display_avatar" : {
+                        "url" : Message.author.display_avatar.url,
+                        "key" : Message.author.display_avatar.key                
+                    }
+                },
+                "jump_url" : Message.thread.jump_url
+            }})
+        else:
+            MessageDataDict.update({"thread" : ""}) # Fill with nothing if none exists
+            print("No thread") # Debug  
+        
+        ## TTS ##
+        if Message.tts:
+            MessageDataDict.update({"tts" : Message.tts})
+        else:
+            MessageDataDict.update({"tts" : ""})
+            print("No tts") # Debug  
             
+        ## TYPE ##
+        if Message.type:
+            MessageDataDict.update({"type" : {
+                "name" : Message.type.name,
+                "value" : Message.type.value
+            }})
+        else:
+            MessageDataDict.update({"type" : ""})
+            print("No type")
+            
+        ## WEBHOOK_ID ##
+        if Message.webhook_id:
+            MessageDataDict.update({"webhook_id" : Message.webhook_id})
+        else:
+            MessageDataDict.update({"webhook_id" : ""})
+            print("No webhook_id")
             
             
         print(f"{MessageDataDict}\n\n")
@@ -388,20 +460,24 @@ async def BackupChannel(ChannelID:int):
         if not os.path.exists(MessageFilePath):
             os.makedirs(MessageFilePath)    
         with open(f"{MessageFilePath}/{Message.id}.json", 'w') as fp:
+            print("Writing to file") # Debug
+            print(MessageDataDict) # Debug
             json.dump(MessageDataDict, fp, indent=4)
 
-
+async def BackupGuild(GuildID:int):
+    TargetGuild = client.get_guild(GuildID)
+    for Channel in TargetGuild.text_channels:
+        await BackupChannel(Channel.id)
 
 
 
 
 @client.event
 async def on_ready():
-
     print(f"Connected as: {client.user.name}")
-    await BackupChannel(TestChannelID)
+    await BackupGuild(773421979348500480)
 
 
 
 
-client.run(ApiKey["CPTOKEN"]) # Grabs CPTOKEN from .env file
+client.run(ApiKey["UBTOKEN"]) # Grabs "TOKEN" from .env file
