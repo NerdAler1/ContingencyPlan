@@ -40,21 +40,28 @@ async def BackupChannel(ChannelID:int):
         ## APPLICATION ##
         if Message.application:
             if Message.application.icon:
+                
                 ApplicationIconDict : dict = {
                     "url" : Message.application.icon.url,
                     "key" : Message.application.icon.key
                 }
             else:
                 ApplicationIconDict : dict = {}
+                
+            if Message.application.cover:
+                ApplicationCoverDict : dict = {
+                    "url" : Message.application.cover.url,
+                    "key" : Message.application.cover.key
+                }
+            else:
+                ApplicationCoverDict : dict = {}
+                
             MessageDataDict.update({"application":{
                 "id" : Message.application.id,
                 "description" : Message.application.description,
                 "name" : Message.application.name,
                 "icon" : ApplicationIconDict,
-                "cover" : {
-                    "url" : Message.application.cover.url, 
-                    "key" : Message.application.cover.key
-                }
+                "cover" : ApplicationCoverDict
             }})
         else: 
             MessageDataDict.update({"application" : ""}) # Fill with nothing if none exists
