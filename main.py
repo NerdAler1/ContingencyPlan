@@ -25,8 +25,11 @@ def GrabAtt(obj, attr, default=None):
 async def BackupChannel(ChannelID:int):
     TargetChannel = client.get_channel(ChannelID)
     async for Message in TargetChannel.history(limit=None,oldest_first=True):
+        if os.path.exists(f"Backups/{Message.guild.id}/{Message.channel.id}/{Message.id}.json"):
+            print(f"Message already exists ({Message.id})")
+            continue
         MessageDataDict : dict = {} # Initialize the dictionary for this message
-
+        
         ## ACTIVITY ##
         if Message.activity:
             MessageDataDict.update({"activity" : Message.activity})
