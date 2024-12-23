@@ -22,12 +22,18 @@ def GrabAtt(obj, attr, default=None):
     except AttributeError:
         return default
 
-async def BackupChannel(ChannelID:int):
+async def BackupChannel(ChannelID:int, FullBackup:bool = False, NewestFirst:bool = False):
     TargetChannel = client.get_channel(ChannelID)
-    async for Message in TargetChannel.history(limit=None,oldest_first=True):
-        if os.path.exists(f"Backups/{Message.guild.id}/{Message.channel.id}/{Message.id}.json"):
-            print(f"Message already exists ({Message.id})")
-            continue
+    
+    async for Message in TargetChannel.history(limit=None,oldest_first= not NewestFirst):
+        
+        print(f"\n\nBaginning backup of message ({Message.id})") # Debug
+        
+        if not FullBackup:
+            if os.path.exists(f"Backups/{Message.guild.id}/{Message.channel.id}/{Message.id}.json"):
+                print(f"Message already exists ({Message.id})")
+                continue
+        
         MessageDataDict : dict = {} # Initialize the dictionary for this message
         
         ## ACTIVITY ##
@@ -36,6 +42,7 @@ async def BackupChannel(ChannelID:int):
         else: 
             MessageDataDict.update({"activity" : ""}) # Fill with nothing if none exists
             print("No activity!") # Debug
+        
         
         ## APPLICATION ##
         if Message.application:
@@ -67,6 +74,7 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"application" : ""}) # Fill with nothing if none exists
             print("No application!") # Debug
         
+        
         ## APPLICATION_ID ##
         if Message.application_id:
             MessageDataDict.update({"application_id" : Message.application_id})
@@ -74,6 +82,7 @@ async def BackupChannel(ChannelID:int):
         else: 
             MessageDataDict.update({"application_id" : ""}) # Fill with nothing if none exists
             print("No application_id!") # Debug
+        
         
         ## ATTACHMENTS ##
         if Message.attachments:
@@ -107,7 +116,8 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"attachments" : ""}) # Fill with nothing if none exists
             print("No attachments!") # Debug
         
-        ## ROLES ##
+        
+        ## AUTHOR ##
         if hasattr(Message.author, "roles"): # Test for roles, if the user is not in the guild anymore, this will fail.
             AvatarDict : dict = {} # Initialize the avatar dict
             print("Has roles, assuming user is member")
@@ -178,6 +188,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"author" : ""}) # Fill with nothing if none exists
             print("No author????!??!?!?!?!?!!") # Debug
+        
                 
         ## CHANNEL ##        
         if Message.channel:
@@ -198,12 +209,14 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"channel" : ""}) # Fill with nothing if none exists
             print("No channel????!??!?!?!?!?!!") # Debug
         
+        
         ## CONTENT ##
         if Message.content:
             MessageDataDict.update({"content" : Message.content})
         else:
             MessageDataDict.update({"content" : ""}) # Fill with nothing if none exists
             print("No content") # Debug 
+        
                 
         ## CLEAN_CONTENT ##        
         if Message.clean_content:
@@ -211,6 +224,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"clean_content" : ""}) # Fill with nothing if none exists
             print("No clean_content") # Debug
+        
             
         ## CREATE_AT ##
         if Message.created_at:
@@ -218,6 +232,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"created_at" : ""}) # Fill with nothing if none exists
             print("No created_at") # Debug
+        
             
         ## EDITED_AT ##
         if Message.edited_at:
@@ -225,6 +240,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"edited_at" : ""}) # Fill with nothing if none exists
             print("No edited_at") # Debug
+        
             
         ## EMBEDS ##
         if Message.embeds:
@@ -240,6 +256,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"embeds" : ""}) # Fill with nothing if none exists
             print("No embeds") # Debug
+        
         
         ## FLAGS ##
         if Message.flags:
@@ -258,6 +275,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"flags" : ""}) # Fill with nothing if none exists
             print("No flags") # Debug
+        
             
         ## ID ##
         if Message.id:
@@ -265,6 +283,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"id" : ""}) # Fill with nothing if none exists
             print("WHAT THE FUCK NO ID?????????") # Debug
+        
         
         ## INTERACTION_METADATA ##
         if Message.interaction_metadata:
@@ -292,12 +311,14 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"interaction_metadata" : ""}) # Fill with nothing if none exists
             print("No interaction_metadata") # Debug
         
+        
         ## JUMP_URL ##
         if Message.jump_url:
             MessageDataDict.update({"jump_url" : Message.jump_url})
         else:
             MessageDataDict.update({"jump_url" : ""}) # Fill with nothing if none exists
             print("No jump_url") # Debug
+        
             
         ## MENTION_EVERYONE ##
         if Message.mention_everyone:
@@ -305,6 +326,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"mention_everyone" : ""}) # Fill with nothing if none exists
             print("No mention_everyone") # Debug
+        
         
         ## MENTIONS ##
         if Message.mentions:
@@ -326,12 +348,14 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"mentions" : ""}) # Fill with nothing if none exists
             print("No mentions") # Debug
         
+        
         ## PINNED ##
         if Message.pinned:
             MessageDataDict.update({"pinned" : Message.pinned})
         else:
             MessageDataDict.update({"pinned" : ""}) # Fill with nothing if none exists
             print("No pinned") # Debug
+        
             
         ## POLLS ##
         if Message.poll:
@@ -361,6 +385,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"poll" : ""}) # Fill with nothing if none exists
             print("No poll") # Debug
+        
             
         ## REACTIONS ##
         if Message.reactions:
@@ -379,6 +404,7 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"reactions" : ""}) # Fill with nothing if none exists
             print("No reactions") # Debug
         
+        
         ## REFERENCE ##
         if Message.reference:
             MessageDataDict.update({"reference" : {
@@ -390,6 +416,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"reference" : ""}) # Fill with nothing if none exists
             print("No reference") # Debug    
+        
             
         ## STICKERS ##
         if Message.stickers:
@@ -408,6 +435,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"stickers" : ""}) # Fill with nothing if none exists
             print("No stickers") # Debug 
+        
             
         ## SYSTEM_CONTENT ##
         if Message.system_content:
@@ -415,6 +443,7 @@ async def BackupChannel(ChannelID:int):
         else:
             MessageDataDict.update({"system_content" : ""}) # Fill with nothing if none exists
             print("No system_content") # Debug     
+        
             
         ## THREADS ##
         if Message.thread:
@@ -446,12 +475,14 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"thread" : ""}) # Fill with nothing if none exists
             print("No thread") # Debug  
         
+        
         ## TTS ##
         if Message.tts:
             MessageDataDict.update({"tts" : Message.tts})
         else:
             MessageDataDict.update({"tts" : ""})
             print("No tts") # Debug  
+            
             
         ## TYPE ##
         if Message.type:
@@ -463,6 +494,7 @@ async def BackupChannel(ChannelID:int):
             MessageDataDict.update({"type" : ""})
             print("No type")
             
+            
         ## WEBHOOK_ID ##
         if Message.webhook_id:
             MessageDataDict.update({"webhook_id" : Message.webhook_id})
@@ -471,30 +503,29 @@ async def BackupChannel(ChannelID:int):
             print("No webhook_id")
             
             
-        print(f"{MessageDataDict}\n\n")
-        
+        ## WRITE TO FILE ##
         MessageFilePath : str = f"Backups/{Message.guild.id}/{Message.channel.id}"
+        
         if not os.path.exists(MessageFilePath):
             os.makedirs(MessageFilePath)    
+        
+        print("Saving to file ({Message.id})") # Debug      
         with open(f"{MessageFilePath}/{Message.id}.json", 'w') as fp:
-            print("Writing to file") # Debug
-            print(MessageDataDict) # Debug
             json.dump(MessageDataDict, fp, indent=4)
-
-async def BackupGuild(GuildID:int):
+            
+            print(f"Written to file ({Message.id})") # Debug
+    print("All Done!")    
+            
+            
+async def BackupGuild(GuildID:int, FullBackup:bool = False, NewestFirst:bool = False):
     TargetGuild = client.get_guild(GuildID)
     for Channel in TargetGuild.text_channels:
-        await BackupChannel(Channel.id)
-
-
+        await BackupChannel(ChannelID=Channel.id, FullBackup=FullBackup, NewestFirst=NewestFirst)
 
 
 @client.event
 async def on_ready():
     print(f"Connected as: {client.user.name}")
-    await BackupGuild(773421979348500480)
+    await BackupGuild(773421979348500480, FullBackup=False, NewestFirst=True)
 
-
-
-
-client.run(ApiKey["UBTOKEN"]) # Grabs "TOKEN" from .env file
+client.run(ApiKey["UBTOKEN"]) # Grabs "TOKEN" from .env file 
