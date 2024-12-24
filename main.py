@@ -7,9 +7,6 @@ from dotenv import dotenv_values
 ### VARIABLES ###
 ApiKey : dict = dotenv_values(".env")
 client = discord.Client(intents=discord.Intents.all())
-TestMessageID : int = 1313081608563064862
-TestGuildID : int = 1302499549931110413
-TestChannelID : int = 1304499100749660250
 
 ### FUNCTIONS ###
 
@@ -533,11 +530,14 @@ async def BackupGuild(GuildID:int, FullBackup:bool = False, NewestFirst:bool = F
 @client.event
 async def on_ready():
     print(f"Connected as: {client.user.name}")
-    await BackupGuild(773421979348500480, FullBackup=False, NewestFirst=True)
+    await BackupGuild(GuildID=GuildIDInput, FullBackup=FullBackupInput, NewestFirst=NewestFirstInput)
     
     
 def main():
-    client.run(ApiKey["UBTOKEN"]) # Grabs "TOKEN" from .env file 
-
+    global GuildIDInput, FullBackupInput, NewestFirstInput
+    GuildIDInput = int(input("What is the Guild ID? "))
+    FullBackupInput  = input("Full Backup? (y/N)").lower() == "y"
+    NewestFirstInput = input("Newest First? (y/N)").lower() == "y"
+    client.run(ApiKey["TOKEN"])
 if __name__ == "__main__":
     main()
